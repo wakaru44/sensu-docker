@@ -2,6 +2,9 @@
 
 shopt -s extglob
 
+# I don't like it when it tries to set up stuff on my local machine
+builddir="./usr/local"
+
 usage() {
     cat <<EOF
 usage: $0 option
@@ -14,19 +17,19 @@ EOF
 }
 
 clean() {
-  rm -rf /usr/local/etc/sensu-docker
+  rm -rf ${builddir}/etc/sensu-docker
 }
 
 setup() {
   workdir=$(pwd)
-  mkdir /usr/local/etc/sensu-docker && cd /usr/local/etc/sensu-docker
+  mkdir -p  ${builddir}/etc/sensu-docker && cd ${builddir}/etc/sensu-docker
   mkdir -p client server sensu_ca/private sensu_ca/certs
   cd $workdir
 }
 
 generate_ssl() {
   workdir=$(pwd)
-  cd /usr/local/etc/sensu-docker
+  cd ${builddir}/etc/sensu-docker
   passwd=$(openssl rand -base64 32 | base64 | head -c 24 ; echo)
   rm sensu_ca/index.txt sensu_ca/serial
   touch sensu_ca/index.txt
@@ -52,7 +55,7 @@ generate_ssl() {
 }
 
 generate_environment() {
-  cat << EOF > /usr/local/etc/sensu-docker/sensu.env
+  cat << EOF > ${builddir}/etc/sensu-docker/sensu.env
 RABBITMQ_PASSWD=$(openssl rand -base64 32 | base64 | head -c 24 ; echo)
 INFLUXDB_SENSU_PASSWD=$(openssl rand -base64 32 | base64 | head -c 24 ; echo)
 INFLUXDB_GRAFANA_PASSWD=$(openssl rand -base64 32 | base64 | head -c 24 ; echo)
