@@ -3,3 +3,4 @@
 **/certs
 ssl/
 *.env
+usr

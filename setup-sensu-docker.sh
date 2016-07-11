@@ -55,6 +55,7 @@ generate_ssl() {
 }
 
 generate_environment() {
+  cd $workdir
   cat << EOF > ${builddir}/etc/sensu-docker/sensu.env
 RABBITMQ_PASSWD=$(openssl rand -base64 32 | base64 | head -c 24 ; echo)
 INFLUXDB_SENSU_PASSWD=$(openssl rand -base64 32 | base64 | head -c 24 ; echo)
